@@ -1,0 +1,12 @@
+.bg-image-1 {
+    /* Image de fond */
+    background-image: url("../images/bg_1.jpg");
+
+    /* taille full */
+    height: 100%;
+
+    /* centrer et redimensionner */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
