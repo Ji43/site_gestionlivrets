@@ -3,28 +3,26 @@
 {% block title %}Connexion au site{% endblock %}
 
 {% block body %}
-
     <div class="container">
-
         <div class="row mt-5">
             <div class="col-md-3">&nbsp;</div>
             <div class="col-md-6">
                 <div class="bg-light py-3 px-3">
                     <h1>Connectez vous !</h1>
 
-{#                    {% if hasError %}#}
-{#                        <div class="alert alert-danger">Une erreur est survenue, le nom d'utilisateur ou le mot de passe est invalide !</div>#}
-{#                    {% endif %}#}
-
-                    <form action="#" method="post">
+                    <form method="post">
+                        {% if error %}
+                            <div class="alert alert-danger">Les informations que vous avez saisi sont incorrectes.</div>
+                        {% endif %}
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" name="_username" id="email" class="form-control"
-                                   placeholder="Adresse email...">
+                            <label for="#inputNomUtilisateur">Nom d'utilisateur</label>
+                            <input type="text"
+                                   name="_username" id="inputNomUtilisateur" class="form-control"
+                                   placeholder="Nom d'utilisateur..." required autofocus>
                         </div>
                         <div class="form-group">
-                            <label for="password">Mot de passe</label>
-                            <input type="password" name="_password" id="password" class="form-control"
+                            <label for="#inputPassword">Mot de passe</label>
+                            <input type="password" name="_password" id="inputPassword" class="form-control"
                                    placeholder="Mot de passe..." required>
                         </div>
                         <div class="form-group">

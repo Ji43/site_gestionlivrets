@@ -5,16 +5,31 @@
 {% block body %}
     <div class="container">
         <div class="jumbotron p-4 mt-5">
-            <h1 class="display-4">Gestion des livrets d'élèves</h1>
-            <p class="lead">
-                Cet outil web a pour but de vous permettre la gestion de vos livrets d'apprentissage. Vous aurez
-                accès
-                à vos propres formulaires en fonction du rôle qui vous a été attribué par l'administrateur.
-            </p>
+            {% if not app.user %}
+                <h1 class="display-4">Gestion des livrets d'élèves</h1>
+                <p class="lead">
+                    Cet outil web a pour but de vous permettre la gestion de vos livrets d'apprentissage. Vous aurez
+                    accès
+                    à vos propres formulaires en fonction du rôle qui vous a été attribué par l'administrateur.
+                </p>
+            {% elseif is_granted('ROLE_ADMIN') %}
+                <h1 class="display-4">Bienvenue {{ app.user.username }} !</h1>
+                <p class="lead">
+                    Vous pouvez à partir du menu gérer vos informations de compte, vos livrets, vos entreprises,
+                    les apprentis, consulter modifier ou supprimer les fiches de suivi de formations déjà remplis
+                    par une entreprise ainsi qu’enregistrer des comptes avec leurs rôles.
+                </p>
+                {% endif %}
             <hr class="my-4">
+
             <p class="lead">
-                <a class="btn btn-primary btn-lg" href="#" role="button">Se connecter</a>
+                {% if not app.user %}
+                <a class="btn btn-primary btn-lg" href="{{ path('login') }}" role="button">Se connecter</a>
+                {% else %}
+                    <a class="btn btn-primary btn-lg" href="{{ path('logout') }}" role="button">Se déconnecter</a>
+                {% endif %}
             </p>
+
         </div>
     </div>
 {% endblock %}

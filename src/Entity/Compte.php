@@ -4,12 +4,19 @@ namespace App\Entity;
 
 use App\Repository\CompteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=CompteRepository::class)
- * @ORM\MappedSuperclass()
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="type_compte", type="string")
+ * @ORM\DiscriminatorMap({
+ *  "administrateur" = "Administrateur",
+ *  "etudiant" = "Etudiant"
+ * })
  */
-class Compte
+
+abstract class Compte implements UserInterface
 {
     /**
      * @ORM\Id
@@ -19,14 +26,31 @@ class Compte
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $nomUtilisateur;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="json")
      */
-    private $motPasse;
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
 
     public function getId(): ?int
     {
@@ -45,15 +69,89 @@ class Compte
         return $this;
     }
 
-    public function getMotPasse(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
     {
-        return $this->motPasse;
+        return (string) $this->nomUtilisateur;
     }
 
-    public function setMotPasse(string $motPasse): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->motPasse = $motPasse;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
 }
