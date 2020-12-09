@@ -7,6 +7,19 @@
 
     /* centrer et redimensionner */
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
+    background-size: cover;
+}
+
+.bg-image-2 {
+    /* Image de fond */
+    background-image: url("../images/bg_2.jpg");
+
+    /* taille full */
+      height: 1000px;
+
+    /* centrer et redimensionner */
+    background-position: center;
+    background-repeat: repeat;
     background-size: cover;
 }

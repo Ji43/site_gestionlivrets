@@ -1,0 +1,44 @@
+{% extends 'base_forms.html.twig' %}
+
+{% block title %}Vos livrets{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <h1 class="my-3"> Mes livrets </h1>
+        <div class="table-responsive">
+            <table class="table table-light">
+                <thead>
+                <tr>
+                    <th scope="col">Intitulé</th>
+                    <th scope="col">Années</th>
+                    <th scope="col">Formation</th>
+                    <th scope="col">Etudiant</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if livrets is empty %}
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <h4 class="alert-heading">Aucun contenu!</h4>
+                        <p class="mb-0">Il n'y a pour l'instant aucun livrets renseignés vous concernant !</p>
+                    </div>
+                {% endif %}
+
+                {% for livret in livrets %}
+                        <tr>
+                            <td>{{ livret.nomLivret | raw }}</td>
+                            <td>{{ livret.annees }}</td>
+                            <td>{{ livret.formation.libelle }}</td>
+                            <td>{{ livret.etudiant.fullName }}</td>
+                        </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

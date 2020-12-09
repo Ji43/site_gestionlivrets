@@ -21,7 +21,7 @@ class Administrateur extends Compte
     public function __construct() {
         $this->id = parent::getId();
         $this->setRoles(
-          ['ROLE_ADMIN']
+          ['ROLE_USER','ROLE_ADMIN']
         );
     }
 
@@ -29,6 +29,4 @@ class Administrateur extends Compte
     {
         return $this->id;
     }
-
-
 }

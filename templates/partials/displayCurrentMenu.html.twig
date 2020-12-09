@@ -1,9 +1,9 @@
 {% if app.request.attributes.get('_route') == route %}
     <li class="nav-item active">
-        <a class="nav-link" href="#">{{ tabName }}</a>
+        <a class="nav-link" href="{{ path(route) }}">{{ tabName }}</a>
     </li>
 {% else %}
     <li class="nav-item">
-        <a class="nav-link" href="#">{{ tabName }}</a>
+        <a class="nav-link" href="{{ path(route) }}">{{ tabName }}</a>
     </li>
 {% endif %}

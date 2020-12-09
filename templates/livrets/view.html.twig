@@ -1,0 +1,46 @@
+{% extends 'base_forms.html.twig' %}
+
+{% block title %}Consultation d'un livret{% endblock %}
+
+{% block body %}
+    {% set formation = livret.formation %}
+    {% set etudiant = livret.etudiant %}
+
+    <div class="container">
+        <h1 class="my-5">Informations sur le livret intitulé : {{ livret.nomLivret|raw }}</h1>
+
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-light">
+                    <h2>Détails du livret</h2>
+                    <dl class="row">
+                        <dt class="col-md-4">Années</dt>
+                        <dd class="col-md-8 ">{{ livret.annees }}</dd>
+                        <dt class="col-md-4">Nom complet du maître de stage</dt>
+                        <dd class="col-md-8 ">{{ livret.maitreStage.fullName }}</dd>
+                        <dt class="col-md-4">Nom du professeur tuteur</dt>
+                        <dd class="col-md-8 ">{{ livret.profTuteur.nom }}</dd>
+                    </dl>
+                    <hr>
+                    <h2>Détails de l'étudiant</h2>
+                    <dl class="row">
+                        <dt class="col-md-4">Nom complet</dt>
+                        <dd class="col-md-8 ">{{ etudiant.fullname }}</dd>
+                        <dt class="col-md-4">Classe</dt>
+                        <dd class="col-md-8 ">{{ etudiant.classe.nomClasse }}</dd>
+                    </dl>
+                    <hr>
+                    <h2>Détails de la formation</h2>
+                    <dl class="row">
+                        <dt class="col-md-4">Intitulé</dt>
+                        <dd class="col-md-8 ">{{ formation.libelle }}</dd>
+                        <dt class="col-md-4">Nom de l'entreprise</dt>
+                        <dd class="col-md-8 ">{{ livret.maitreStage.entreprise.nom }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="btn btn-primary btn-lg"><i class="fas fa-sticky-note"></i> Fiches de suivis</a>
+    </div>
+
+{% endblock %}

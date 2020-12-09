@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\EtudiantRepository;
 use App\Service\usernamePasswordMakerService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -29,14 +31,26 @@ class Etudiant extends Compte
      */
     private $dateNaissance;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="etudiants")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $classe;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=Livret::class, mappedBy="etudiant")
+     */
+    private $livrets;
+
 
     public function __construct(){
 
         $this->id = parent::getId();
         $this->setRoles(
-            ['ROLE_ETUDIANT']
+            ['ROLE_USER','ROLE_ETUDIANT']
         );
-
+        $this->livrets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,4 +81,49 @@ class Etudiant extends Compte
 
         return $this;
     }
+
+    public function getClasse(): ?Classe
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?Classe $classe): self
+    {
+        $this->classe = $classe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Livret[]
+     */
+    public function getLivrets(): Collection
+    {
+        return $this->livrets;
+    }
+
+    public function addLivret(Livret $livret): self
+    {
+        if (!$this->livrets->contains($livret)) {
+            $this->livrets[] = $livret;
+            $livret->setEtudiant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivret(Livret $livret): self
+    {
+        if ($this->livrets->removeElement($livret)) {
+            // set the owning side to null (unless already changed)
+            if ($livret->getEtudiant() === $this) {
+                $livret->setEtudiant(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
 }
