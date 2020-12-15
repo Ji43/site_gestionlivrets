@@ -1,0 +1,45 @@
+{% extends 'base_forms.html.twig' %}
+
+{% block title %}Nouveau livret{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <h1 class="my-5">Nouveau livret</h1>
+        {{ form_start(form) }}
+
+        {% include 'livrets/form_livret.html.twig' with {
+            'formTitle': "Informations générales",
+            'champSelect': form.periode,
+            'champNew': form.nouvellePeriode
+        } %}
+
+        {% include 'livrets/form_livret.html.twig' with {
+            'formTitle': "Informations formation",
+            'champSelect': form.formation,
+            'champNew': form.nouvelleFormation
+        } %}
+
+        {% include 'livrets/form_livret.html.twig' with {
+            'formTitle': "Informations maître de stage",
+            'champSelect': form.maitreStage,
+            'champNew': form.nouveauMaitreStage
+        } %}
+
+        {% include 'livrets/form_livret.html.twig' with {
+            'formTitle': "Informations professeur tuteur",
+            'champSelect': form.profTuteur,
+            'champNew': form.nouveauProfTuteur
+        } %}
+
+        {% include 'livrets/form_livret.html.twig' with {
+            'formTitle': "Informations étudiant",
+            'champSelect': form.etudiant,
+            'champNew': form.nouveauEtudiant
+        } %}
+
+    </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}

@@ -7,7 +7,9 @@
     {% set etudiant = livret.etudiant %}
 
     <div class="container">
-        <h1 class="my-5">Informations sur le livret intitulé : {{ livret.nomLivret|raw }}</h1>
+        <div class="alert alert-dismissible alert-info mt-3 h3">
+            Informations sur le livret intitulé : {{ livret.nomLivret|raw }}
+        </div>
 
         <div class="row">
             <div class="col">
@@ -15,7 +17,7 @@
                     <h2>Détails du livret</h2>
                     <dl class="row">
                         <dt class="col-md-4">Années</dt>
-                        <dd class="col-md-8 ">{{ livret.annees }}</dd>
+                        <dd class="col-md-8 ">{{ livret.periode.annees }}</dd>
                         <dt class="col-md-4">Nom complet du maître de stage</dt>
                         <dd class="col-md-8 ">{{ livret.maitreStage.fullName }}</dd>
                         <dt class="col-md-4">Nom du professeur tuteur</dt>

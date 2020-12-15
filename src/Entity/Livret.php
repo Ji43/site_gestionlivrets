@@ -23,16 +23,6 @@ class Livret
     private $nomLivret;
 
     /**
-     * @ORM\Column(type="string", length=4)
-     */
-    private $annee1;
-
-    /**
-     * @ORM\Column(type="string", length=4)
-     */
-    private $annee2;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Formation::class, inversedBy="livrets")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -54,6 +44,12 @@ class Livret
      */
     private $profTuteur;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Periode::class, inversedBy="livrets")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $periode;
+
 
     public function getId(): ?int
     {
@@ -72,30 +68,6 @@ class Livret
         return $this;
     }
 
-    public function getAnnee1(): ?string
-    {
-        return $this->annee1;
-    }
-
-    public function setAnnee1(string $annee1): self
-    {
-        $this->annee1 = $annee1;
-
-        return $this;
-    }
-
-    public function getAnnee2(): ?string
-    {
-        return $this->annee2;
-    }
-
-    public function setAnnee2(string $annee2): self
-    {
-        $this->annee2 = $annee2;
-
-        return $this;
-    }
-
     public function getFormation(): ?Formation
     {
         return $this->formation;
@@ -106,11 +78,6 @@ class Livret
         $this->formation = $formation;
 
         return $this;
-    }
-
-
-    public function getAnnees() : string {
-        return $this->getAnnee1() . "-" . $this->getAnnee2();
     }
 
     public function getEtudiant() : ?Etudiant {
@@ -144,6 +111,18 @@ class Livret
     public function setProfTuteur(?ProfTuteur $profTuteur): self
     {
         $this->profTuteur = $profTuteur;
+
+        return $this;
+    }
+
+    public function getPeriode(): ?Periode
+    {
+        return $this->periode;
+    }
+
+    public function setPeriode(?Periode $periode): self
+    {
+        $this->periode = $periode;
 
         return $this;
     }

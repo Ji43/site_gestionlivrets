@@ -9,6 +9,7 @@ use App\Entity\Etudiant;
 use App\Entity\Formation;
 use App\Entity\Livret;
 use App\Entity\MaitreStage;
+use App\Entity\Periode;
 use App\Entity\ProfTuteur;
 use App\Service\LivretNamerService;
 use App\Service\usernamePasswordMakerService;
@@ -176,18 +177,21 @@ class AppFixtures extends Fixture
 
             $randomEtudiant = $etudiants[array_rand($etudiants)];
             $uneTrancheAnnee = array_rand($annees);
-            $livret = new Livret();
-            $livret->setAnnee1(
+
+            $periode = new Periode();
+            $periode->setAnnee1(
                 $annees [$uneTrancheAnnee][0]
             );
-
-            $livret->setAnnee2(
+            $periode->setAnnee2(
                 $annees [$uneTrancheAnnee][1]
             );
+            $manager->persist($periode);
 
+            $livret = new Livret();
+            $livret->setPeriode($periode);
             $livret->setNomLivret(
                 $this->livretNamer->generateLivretName(
-                    $formation, $randomEtudiant, $livret->getAnnees()
+                    $formation, $randomEtudiant, $periode->getAnnees()
                 ));
             $livret->setFormation($formation);
             $livret->setEtudiant(

@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\Etudiant;
 use App\Entity\Formation;
+use App\Entity\Livret;
 
 /**
  * Ce service permet de nommer un livret en fonction du nom de la formation,
@@ -16,10 +17,10 @@ use App\Entity\Formation;
 class LivretNamerService
 {
 
-    public function generateLivretName(Formation $formation, Etudiant $etudiant, string $annees) : string {
+    public function generateLivretName(Livret $livret) : string {
 
-        return "Livret de la formation ". "<i>" . $formation->getLibelle() . "</i> de l'apprentis " .
-            $etudiant->getFullName() . " pour les années " . $annees;
+        return "Formation ". "<i>" . $livret->getFormation()->getLibelle() . "</i> de l'apprentis " .
+            $livret->getEtudiant()->getFullName() . " pour les années " . $livret->getPeriode()->getAnnees();
 
     }
 
