@@ -29,6 +29,8 @@ class Classe
      */
     private $etudiants;
 
+
+
     public function __construct()
     {
         $this->etudiants = new ArrayCollection();
@@ -80,4 +82,5 @@ class Classe
 
         return $this;
     }
+
 }

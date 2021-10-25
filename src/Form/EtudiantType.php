@@ -25,42 +25,39 @@ class EtudiantType extends ApplicationType
     {
         $builder
             ->add('nom',
-            TextType::class,
-            $this->getConfiguration(
-             'Nom de famille',
-            'Renseignez le nom de famille de l\'étudiant...'
+                TextType::class,
+                $this->getConfiguration(
+                    'Nom',
+                    'Renseignez le nom de l\'étudiant...'
                 ))
-
             ->add('prenom',
-            TextType::class,
-            $this->getConfiguration(
-             'Prénom',
-            'Renseignez le prénom de l\'étudiant...'
-            ))
-
+                TextType::class,
+                $this->getConfiguration(
+                    'Prénom',
+                    'Renseignez le prénom de l\'étudiant...'
+                ))
             ->add('mail',
-            EmailType::class,
-            $this->getConfiguration(
-             'Adresse email',
-             'Renseignez l\'adresse email de l\'étudiant...'
-            ))
-
+                EmailType::class,
+                $this->getConfiguration(
+                    'Adresse email',
+                    'Renseignez l\'adresse email de l\'étudiant...'
+                ))
             ->add('dateNaissance',
-            DateType::class,
-             $this->getConfiguration(
-             'Date de naissance',
-             'Renseignez la date de naissance de l\'étudiant...',
-                 array(
-                  'widget' => 'choice'
-                 )))
-
+                DateType::class,
+                $this->getConfiguration(
+                    'Date de naissance',
+                    'Renseignez la date de naissance de l\'étudiant...',
+                    array(
+                        'widget' => 'choice',
+                        'years' => range('1970','2005')
+                    )))
             ->add('classe',
-            EntityType::class, [
-                'class' => Classe::class,
-                'choice_label' => 'nomClasse',
-                'label' => 'Classe'
-                ])
-        ;
+                EntityType::class,
+                $this->getConfigurationEntityType(
+                    Classe::class, "Classe", "nomClasse", "Sélectionner une classe..."
+                )
+            )
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

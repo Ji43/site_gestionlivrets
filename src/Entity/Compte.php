@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *  "administrateur" = "Administrateur",
  *  "etudiant" = "Etudiant",
  *  "profTuteur" = "ProfTuteur",
- *  "maitreStage" = "MaitreStage"
+ *  "maitreApprentissage" = "MaitreApprentissage"
  * })
  */
 
@@ -70,6 +70,25 @@ abstract class Compte implements UserInterface
         $this->nomUtilisateur = $nomUtilisateur;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleName() : string {
+
+            if ($this instanceof Administrateur) {
+                return "Administrateur";
+            }
+            else if ($this instanceof Etudiant) {
+                return "Étudiant";
+            }
+            else if ($this instanceof ProfTuteur) {
+                return "Professeur";
+            }
+            else {
+                return "Entreprise";
+            }
     }
 
     /**

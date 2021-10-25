@@ -43,7 +43,8 @@ class ApplicationType extends AbstractType
             'class' => $class,
             'label' => $label,
             'choice_label' => $choiceLabel,
-            'placeholder' => $placeholder
+            'placeholder' => $placeholder,
+            'required' => false
         );
 
     }
@@ -54,28 +55,35 @@ class ApplicationType extends AbstractType
      * @param string $label
      * @return array
      */
-    protected function getConfigurationFormType(string $label, string $propertyPath): array
+    protected function getConfigurationFormType(string $label): array
     {
         return array(
             'label' => $label,
             'mapped' => false,
             'required' => false,
-            'property_path' => $propertyPath
         );
 
     }
 
-    protected function setFormEvent(array $data, FormInterface $form, string $oldField, string $newField, string $class)
+    /**
+     * Permet de vérifier qu'il s'agisse bien d'un ajout nouveau et si c'est le cas on
+     * l'enregistre en le bindant au champ de l'entité
+     *
+     * @param array $data
+     * @param FormInterface $form
+     * @param string $selectField
+     * @param string $newField
+     * @param string $class
+     */
+    protected function setFormEvent(array $data, FormInterface $form, string $selectField, string $newField, string $class)
     {
 
-        if (!empty($data[$newField]['id'])) {
+        if ( empty($data[$selectField]) && !empty($data[$newField]['id']) ) {
 
-            $form->remove($oldField);
+            $form->remove($newField);
             $form->add($newField,
                 $class, [
-                    'required' => true,
-                    'mapped' => true,
-                    'property_path' => $oldField
+                    'property_path' => $selectField
                 ]);
         }
 

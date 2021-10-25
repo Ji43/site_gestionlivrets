@@ -24,6 +24,7 @@ class ProfTuteur extends Compte
      */
     private $livrets;
 
+
     public function __construct() {
 
         $this->id = parent::getId();
@@ -31,7 +32,6 @@ class ProfTuteur extends Compte
             ['ROLE_USER','ROLE_PROFTUTEUR']
         );
         $this->livrets = new ArrayCollection();
-
     }
 
     public function getId(): ?int
@@ -98,4 +98,5 @@ class ProfTuteur extends Compte
 
         return $this;
     }
+
 }

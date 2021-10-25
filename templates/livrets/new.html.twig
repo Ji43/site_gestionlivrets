@@ -8,34 +8,35 @@
         <h1 class="my-5">Nouveau livret</h1>
         {{ form_start(form) }}
 
-        {% include 'livrets/form_livret.html.twig' with {
+{#        {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations générales",
             'champSelect': form.periode,
-            'champNew': form.nouvellePeriode
+            'champNew': form.nouvellePeriode,
         } %}
 
         {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations formation",
             'champSelect': form.formation,
-            'champNew': form.nouvelleFormation
+            'champNew': form.nouvelleFormation,
         } %}
 
         {% include 'livrets/form_livret.html.twig' with {
-            'formTitle': "Informations maître de stage",
-            'champSelect': form.maitreStage,
-            'champNew': form.nouveauMaitreStage
+            'formTitle': "Informations maître d'apprentissage",
+            'champSelect': form.maitreApprentissage,
+            'champNew': form.nouveauMaitreApprentissage,
         } %}
 
         {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations professeur tuteur",
             'champSelect': form.profTuteur,
-            'champNew': form.nouveauProfTuteur
-        } %}
+            'champNew': form.nouveauProfTuteur,
+        } %}#}
 
         {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations étudiant",
             'champSelect': form.etudiant,
-            'champNew': form.nouveauEtudiant
+            'champNew': form.nouveauEtudiant,
+            'button': true
         } %}
 
     </div>

@@ -11,10 +11,10 @@ use App\Entity\ProfTuteur;
  * Ce service permet de générer un nom d'utilisateur et un mot de passe à partir des différents besoins qui se
  * rapportent aux comptes. Les noms d'utilisateurs deviennent "nom.prenom". Le mot de passe d'un étudiant se
  * constitue comme ceci avec comme exemple "Alexandre Bertrand" né le 01/01/2000 : ET-Ab01012000 avec "ET"
- * derrière pour étudiant. Le même principe est utilisé pour le professeur tuteur mais au lieu de sa date
+ * derrière pour étudiant. Le même principe est utilisé pour le professeur tuteur mais au lieu de la date
  * de naissance car elle n'est pas renseignée dans ce cas, il s'agit de laCHARTREUSE@43000 avec comme prefixe
- * PT. (ex : PT-AblaCHARTREUSE@43000) Enfin pour le maitre de stage, c'est la même chose mais la fin du mot
- * de passe se constitue du nom de son entreprise en majuscule avec un arobase à la fin. (ex : MS-AbEUREKA43@)
+ * PT. (ex : PT-AblaCHARTREUSE@43000). Enfin pour le maitre d'apprentissage, c'est la même chose mais la fin du mot
+ * de passe se constitue du nom de son entreprise en majuscule avec un arobase à la fin. (ex : MA-AbEUREKA43@)
  *
  *
  */
@@ -66,7 +66,7 @@ class usernamePasswordMakerService
                 str_replace($caracteres, "", $nomEntreprise)
             );
 
-            $password .= "MS-" . $touteInitiales . $nomEntrepriseFiltre . "@";
+            $password .= "MA-" . $touteInitiales . $nomEntrepriseFiltre . "@";
         }
 
         return $password;

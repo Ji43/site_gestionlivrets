@@ -8,7 +8,7 @@ use App\Entity\Entreprise;
 use App\Entity\Etudiant;
 use App\Entity\Formation;
 use App\Entity\Livret;
-use App\Entity\MaitreStage;
+use App\Entity\MaitreApprentissage;
 use App\Entity\Periode;
 use App\Entity\ProfTuteur;
 use App\Service\LivretNamerService;
@@ -25,7 +25,7 @@ class AppFixtures extends Fixture
     private $livretNamer;
 
     public function __construct(UserPasswordEncoderInterface $encoder, usernamePasswordMakerService $usernamePasswordMaker,
-                                LivretNamerService $livretNamer
+                                LivretNamerService           $livretNamer
     )
 
     {
@@ -34,16 +34,36 @@ class AppFixtures extends Fixture
         $this->livretNamer = $livretNamer;
     }
 
+    public function isTransactional(): bool
+    {
+        return false;
+    }
+
+    //Ici, le but du jeu d'essais est d'obtenir :
+    // - Un compte admin
+    // - Les classes BTS SIO1, SIO2 et MSW
+    // - 3 professeurs qui vont être tuteurs d'élèves apprentis
+    // - 6 exemples de formations que peuvent proposer des entreprises
+    // - 5 périodes de formations
+    // - 30 étudiants dont chacun se forme dans une entreprise (= 30 entreprises) avec un maitre d'apprentissage
+    // pour chaque entreprise (= 30 MA). Une entreprise propose de 1 à 3 des formations listées et chaque
+    // étudiant en suit une proposée par son entreprise.
+    // Un livret constitue l'ensemble des infos sur ce suivi, à savoir : L'étudiant, son entreprise, la formation
+    // qu'il suit, son professeur tuteur (choix aléatoire) et son maitre d'apprentissage (qui est celui lié à
+    // l'entreprise crée en même temps). A savoir : un étudiant peut avoir plus d'un livret (il peut avoir suivi
+    // diverses formations sur diverses périodes), mais ici l'idée est d'en faire un seul par étudiant.
+
     public function load(ObjectManager $manager)
     {
         //Objet faker qui permet de générer des jeux de données aléatoires
         $faker = Factory::create("fr_FR");
-        //Tableaux d'objets pour piocher à l'intérieur lors des liaisons entre entités
-        $classes = array();
-        $etudiants = array();
+        //Tableaux d'objets pour y piocher à l'intérieur lors des liaisons entre entités
+        $formations = array();
+        $lesPeriodes = array();
         $profsTuteurs = array();
-        //Tableaux de tranches d'années pour générer les livrets
-        $annees = array(
+
+        //Tableaux des périodes
+        $periodes = array(
             ["2014", "2015"],
             ["2015", "2016"],
             ["2017", "2018"],
@@ -53,88 +73,137 @@ class AppFixtures extends Fixture
 
         //Un compte administrateur
         $compteAdmin = new Administrateur();
-        $compteAdmin->setNom("Admin");
-        $compteAdmin->setPrenom("Chartreuse");
-        $compteAdmin->setNomUtilisateur("Admin");
+        $compteAdmin->setNom("Petit");
+        $compteAdmin->setPrenom("Bertrand");
+        $compteAdmin->setNomUtilisateur(
+            $this->usernamePasswordMaker->generateUsername($compteAdmin)
+        );
         $compteAdmin->setPassword(
             $this->passwordEncoder->encodePassword(
-                $compteAdmin, 'test'));
+                $compteAdmin, 'admin'));
         $manager->persist($compteAdmin);
 
         //Création des classes
-        for ($i = 0; $i < 5; $i++) {
 
-            $classeEleve = new Classe();
-            $classeEleve->setNomClasse($faker->sentence(1));
-            $manager->persist($classeEleve);
-            //Ajout au tableau des classes
-            $classes [] = $classeEleve;
-        }
+        $classeSio1 = new Classe();
+        $classeSio1->setNomClasse("BTS SIO 1ère année");
+        $classes[] = $classeSio1;
+        $manager->persist($classeSio1);
 
-        //Création des étudiants
-        for ($i = 0; $i < 10; $i++) {
+        $classeSio2 = new Classe();
+        $classeSio2->setNomClasse("BTS SIO 2nd année");
+        $classes[] = $classeSio2;
+        $manager->persist($classeSio2);
 
-            $compteEtudiant = new Etudiant();
-
-            //On lui attribue une des classes aléatoire du tableau
-            $compteEtudiant->setClasse(
-                $classes [array_rand($classes)]
-            );
-
-            $compteEtudiant->setNom(
-                $faker->lastName
-            );
-
-            $compteEtudiant->setPrenom(
-                $faker->firstName
-            );
-
-            $compteEtudiant->setMail(
-                $faker->email
-            );
-
-            $compteEtudiant->setDateNaissance(
-                $faker->dateTimeBetween("01-01-1997", "30-12-2002")
-            );
-            //On créer son nom d'utilisateur à partir du service de génération
-            //de nom d'utilisateur
-            $compteEtudiant->setNomUtilisateur(
-                $this->usernamePasswordMaker->generateUsername($compteEtudiant));
-
-            $compteEtudiant->setPassword(
-                $this->passwordEncoder->encodePassword(
-                    $compteEtudiant,
-                    "password"
-                ));
-            $manager->persist($compteEtudiant);
-            $etudiants[] = $compteEtudiant;
-        }
+        $classeMsw = new Classe();
+        $classeMsw->setNomClasse("MSW");
+        $classes[] = $classeMsw;
+        $manager->persist($classeMsw);
 
         //Création des profs tuteurs
-        for ($i = 0; $i < 5; $i++) {
+        $prof1 = new ProfTuteur();
+        $prof1->setNom("Cognasse");
+        $prof1->setPrenom("Alain");
+        $prof1->setNomUtilisateur(
+            $this->usernamePasswordMaker->generateUsername($prof1)
+        );
+        $prof1->setPassword($this->passwordEncoder->encodePassword($prof1, "password"));
+        $profsTuteurs[] = $prof1;
+        $manager->persist($prof1);
 
-            $compteProfTuteur = new ProfTuteur();
-            $compteProfTuteur->setNom(
-                $faker->lastName
+        $prof2 = new ProfTuteur();
+        $prof2->setNom("Demars");
+        $prof2->setPrenom("Francis");
+        $prof2->setNomUtilisateur(
+            $this->usernamePasswordMaker->generateUsername($prof2)
+        );
+        $prof2->setPassword($this->passwordEncoder->encodePassword($prof2, "password"));
+        $profsTuteurs[] = $prof2;
+        $manager->persist($prof2);
+
+        $prof3 = new ProfTuteur();
+        $prof3->setNom("Descours");
+        $prof3->setPrenom("Nicolas");
+        $prof3->setNomUtilisateur(
+            $this->usernamePasswordMaker->generateUsername($prof3)
+        );
+        $prof3->setPassword($this->passwordEncoder->encodePassword($prof3, "password"));
+        $profsTuteurs[] = $prof3;
+        $manager->persist($prof3);
+
+        //Création des formations
+        $formation1 = new Formation();
+        $formation1->setLibelle("Développeur Front-end HTML,CSS,JS et React");
+        $formations[] = $formation1;
+        $manager->persist($formation1);
+
+        $formation2 = new Formation();
+        $formation2->setLibelle("Développeur Full-Stack React et Symfony");
+        $formations[] = $formation2;
+        $manager->persist($formation2);
+
+        $formation3 = new Formation();
+        $formation3->setLibelle("Développeur Full-Stack Angular et PHP native");
+        $formations[] = $formation3;
+        $manager->persist($formation3);
+
+        $formation4 = new Formation();
+        $formation4->setLibelle("Architècte réseaux");
+        $formations[] = $formation4;
+        $manager->persist($formation4);
+
+        $formation5 = new Formation();
+        $formation5->setLibelle("Administrateur réseaux");
+        $formations[] = $formation5;
+        $manager->persist($formation5);
+
+        $formation6 = new Formation();
+        $formation6->setLibelle("Technicien réseaux");
+        $formations[] = $formation6;
+        $manager->persist($formation6);
+
+        //Création des périodes
+        foreach ($periodes as $unePeriode) {
+            $periode = new Periode();
+            $periode->setAnnee1(
+                $unePeriode[0]
             );
-
-            $compteProfTuteur->setPrenom(
-                $faker->firstName
+            $periode->setAnnee2(
+                $unePeriode[1]
             );
-
-            $compteProfTuteur->setNomUtilisateur(
-                $this->usernamePasswordMaker->generateUsername($compteProfTuteur));
-
-            $compteProfTuteur->setPassword(
-                $this->passwordEncoder->encodePassword(
-                    $compteProfTuteur, "password"
-                ));
-            $manager->persist($compteProfTuteur);
-            $profsTuteurs[] = $compteProfTuteur;
+            $lesPeriodes[] = $periode;
+            $manager->persist($periode);
         }
 
-        //Création des entreprises, maîtres de stage, formations et livrets
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
+
+            //Création des étudiants
+            $etudiant = new Etudiant();
+            if($i<10) {
+                $etudiant->setClasse($classeSio1);
+            }
+            else if ($i<20) {
+                $etudiant->setClasse($classeSio2);
+            }
+            else {
+                $etudiant->setClasse($classeMsw);
+            }
+            $etudiant->setNom($faker->lastName);
+            $etudiant->setPrenom($faker->firstName);
+            $etudiant->setMail($faker->email);
+            $etudiant->setDateNaissance(
+                $faker->dateTimeBetween("01-01-1997", "30-12-2002"
+                ));
+            $etudiant->setNomUtilisateur(
+                $this->usernamePasswordMaker->generateUsername($etudiant)
+            );
+            $etudiant->setPassword(
+                $this->passwordEncoder->encodePassword(
+                    $etudiant, "password"
+                ));
+            $manager->persist($etudiant);
+
+            //Création des entreprises
             $entreprise = new Entreprise();
             $entreprise->setNom(
                 $faker->company
@@ -148,61 +217,64 @@ class AppFixtures extends Fixture
             $entreprise->setTel(
                 $faker->phoneNumber
             );
+
+            //Une entreprise peut proposer jusqu'à 3 formations de la liste crée auparavant
+            $formationsEntreprises = array();
+            $randInt = rand(1,3);
+            $randFormations = array_rand($formations,$randInt);
+
+            //Si la fonction array_rand n'a retourné qu'une seule valeur
+            if(is_numeric($randFormations)) {
+                $entreprise->addFormation($formations[$randFormations]);
+                $formationsEntreprises[] = $formations[$randFormations];
+            }
+            //Si la fonction array_rand a retourné un tableau de valeurs
+            else {
+                foreach ($randFormations as $f) {
+                    $entreprise->addFormation($formations[$f]);
+                    $formationsEntreprises[] = $formations[$f];
+                }
+            }
+
             $manager->persist($entreprise);
 
-            $compteMaitreStage = new MaitreStage();
-            $compteMaitreStage->setEntreprise($entreprise);
-            $compteMaitreStage->setNom(
+            //Création des maitres d'apprentissage
+            $MaitreApprentissage = new MaitreApprentissage();
+            $MaitreApprentissage->setNom(
                 $faker->lastName
             );
-            $compteMaitreStage->setPrenom(
+            $MaitreApprentissage->setPrenom(
                 $faker->firstName
             );
-            $compteMaitreStage->setNomUtilisateur(
-                $this->usernamePasswordMaker->generateUsername($compteMaitreStage)
+            $MaitreApprentissage->setNomUtilisateur(
+                $this->usernamePasswordMaker->generateUsername($MaitreApprentissage)
             );
-            $compteMaitreStage->setPassword(
+            $MaitreApprentissage->setPassword(
                 $this->passwordEncoder->encodePassword(
-                    $compteMaitreStage, "password"
+                    $MaitreApprentissage, "password"
                 ));
-            $manager->persist($compteMaitreStage);
+            $MaitreApprentissage->setEntreprise($entreprise);
+            $manager->persist($MaitreApprentissage);
 
-            $formation = new Formation();
-            $formation->setLibelle(
-                $faker->sentence(2)
-            );
-            $formation->addEntreprise($entreprise);
-            $manager->persist($formation);
-
-
-            $randomEtudiant = $etudiants[array_rand($etudiants)];
-            $uneTrancheAnnee = array_rand($annees);
-
-            $periode = new Periode();
-            $periode->setAnnee1(
-                $annees [$uneTrancheAnnee][0]
-            );
-            $periode->setAnnee2(
-                $annees [$uneTrancheAnnee][1]
-            );
-            $manager->persist($periode);
-
+            //Création des 30 livrets (1 par étudiant)
             $livret = new Livret();
-            $livret->setPeriode($periode);
+            $livret->setPeriode($lesPeriodes[array_rand($lesPeriodes)]);
+
+            $indexFormation = array_rand($formationsEntreprises);
+            $formation = $formationsEntreprises[$indexFormation];
+            $livret->setFormation($formation);
+
+            $livret->setEtudiant($etudiant);
+            $livret->setProfTuteur($profsTuteurs[array_rand($profsTuteurs)]);
+            $livret->setMaitreApprentissage($MaitreApprentissage);
+
             $livret->setNomLivret(
                 $this->livretNamer->generateLivretName(
-                    $formation, $randomEtudiant, $periode->getAnnees()
+                    $livret
                 ));
-            $livret->setFormation($formation);
-            $livret->setEtudiant(
-                $randomEtudiant
-            );
-            $livret->setProfTuteur($profsTuteurs[array_rand($profsTuteurs)]);
-            $livret->setMaitreStage($compteMaitreStage);
             $manager->persist($livret);
         }
 
         $manager->flush();
     }
-
 }

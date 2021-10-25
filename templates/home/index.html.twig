@@ -32,13 +32,13 @@
                                         compléter vos fiches de suivi de formations."
                             } %}
 
-                    {% elseif is_granted('ROLE_PROFTUTEUR') or is_granted('ROLE_MAITRESTAGE') %}
+                    {% elseif is_granted('ROLE_PROFTUTEUR') or is_granted('ROLE_MAITREAPPRENTISSAGE') %}
 
                         {% include 'partials/jumbotron_texts_home.html.twig' with
                             {
                                 'titre': "Bienvenue " ~ app.user.fullName ~ " !",
                                 'contenu': "Vous pouvez à partir du menu gérer vos informations de compte, consulter les livrets
-                                 et les fiches de suivi de formations qui vous sont liés."
+                                 les fiches de suivi de formations qui vous sont liés."
                             } %}
                     {% endif %}
 

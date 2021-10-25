@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\MaitreStage;
+use App\Entity\MaitreApprentissage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method MaitreStage|null find($id, $lockMode = null, $lockVersion = null)
- * @method MaitreStage|null findOneBy(array $criteria, array $orderBy = null)
- * @method MaitreStage[]    findAll()
- * @method MaitreStage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method MaitreApprentissage|null find($id, $lockMode = null, $lockVersion = null)
+ * @method MaitreApprentissage|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MaitreApprentissage[]    findAll()
+ * @method MaitreApprentissage[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MaitreStageRepository extends ServiceEntityRepository
+class MaitreApprentissageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, MaitreStage::class);
+        parent::__construct($registry, MaitreApprentissage::class);
     }
 
     // /**
-    //  * @return MaitreStage[] Returns an array of MaitreStage objects
+    //  * @return MaitreApprentissage[] Returns an array of MaitreApprentissage objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class MaitreStageRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?MaitreStage
+    public function findOneBySomeField($value): ?MaitreApprentissage
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.exampleField = :val')

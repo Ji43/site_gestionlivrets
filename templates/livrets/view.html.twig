@@ -18,10 +18,10 @@
                     <dl class="row">
                         <dt class="col-md-4">Années</dt>
                         <dd class="col-md-8 ">{{ livret.periode.annees }}</dd>
-                        <dt class="col-md-4">Nom complet du maître de stage</dt>
-                        <dd class="col-md-8 ">{{ livret.maitreStage.fullName }}</dd>
-                        <dt class="col-md-4">Nom du professeur tuteur</dt>
-                        <dd class="col-md-8 ">{{ livret.profTuteur.nom }}</dd>
+                        <dt class="col-md-4">Maître d'apprentissage</dt>
+                        <dd class="col-md-8 ">{{ livret.maitreApprentissage.fullName }}</dd>
+                        <dt class="col-md-4">Professeur tuteur</dt>
+                        <dd class="col-md-8 ">{{ livret.profTuteur.fullName }}</dd>
                     </dl>
                     <hr>
                     <h2>Détails de l'étudiant</h2>
@@ -37,7 +37,7 @@
                         <dt class="col-md-4">Intitulé</dt>
                         <dd class="col-md-8 ">{{ formation.libelle }}</dd>
                         <dt class="col-md-4">Nom de l'entreprise</dt>
-                        <dd class="col-md-8 ">{{ livret.maitreStage.entreprise.nom }}</dd>
+                        <dd class="col-md-8 ">{{ livret.maitreApprentissage.entreprise.nom }}</dd>
                     </dl>
                 </div>
             </div>

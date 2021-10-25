@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\MaitreStageRepository;
+use App\Repository\MaitreApprentissageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=MaitreStageRepository::class)
+ * @ORM\Entity(repositoryClass=MaitreApprentissageRepository::class)
  */
-class MaitreStage extends Compte
+class MaitreApprentissage extends Compte
 {
     /**
      * @ORM\Id
@@ -20,13 +20,13 @@ class MaitreStage extends Compte
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Entreprise::class, inversedBy="maitreStages")
+     * @ORM\ManyToOne(targetEntity=Entreprise::class, inversedBy="maitreApprentissages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $entreprise;
 
     /**
-     * @ORM\OneToMany(targetEntity=Livret::class, mappedBy="maitreStage")
+     * @ORM\OneToMany(targetEntity=Livret::class, mappedBy="maitreApprentissages")
      */
     private $livrets;
 
@@ -34,9 +34,8 @@ class MaitreStage extends Compte
     {
         $this->id = parent::getId();
         $this->setRoles(
-            ['ROLE_USER','ROLE_MAITRESTAGE']
+            ['ROLE_USER','ROLE_MAITREAPPRENTISSAGE']
         );
-        $this->etudiants = new ArrayCollection();
         $this->livrets = new ArrayCollection();
     }
 
@@ -58,36 +57,6 @@ class MaitreStage extends Compte
     }
 
     /**
-     * @return Collection|Etudiant[]
-     */
-    public function getEtudiants(): Collection
-    {
-        return $this->etudiants;
-    }
-
-    public function addEtudiant(Etudiant $etudiant): self
-    {
-        if (!$this->etudiants->contains($etudiant)) {
-            $this->etudiants[] = $etudiant;
-            $etudiant->setMaitreStage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEtudiant(Etudiant $etudiant): self
-    {
-        if ($this->etudiants->removeElement($etudiant)) {
-            // set the owning side to null (unless already changed)
-            if ($etudiant->getMaitreStage() === $this) {
-                $etudiant->setMaitreStage(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Livret[]
      */
     public function getLivrets(): Collection
@@ -99,7 +68,7 @@ class MaitreStage extends Compte
     {
         if (!$this->livrets->contains($livret)) {
             $this->livrets[] = $livret;
-            $livret->setMaitreStage($this);
+            $livret->setMaitreApprentissage($this);
         }
 
         return $this;
@@ -109,8 +78,8 @@ class MaitreStage extends Compte
     {
         if ($this->livrets->removeElement($livret)) {
             // set the owning side to null (unless already changed)
-            if ($livret->getMaitreStage() === $this) {
-                $livret->setMaitreStage(null);
+            if ($livret->getMaitreApprentissage() === $this) {
+                $livret->setMaitreApprentissage(null);
             }
         }
 

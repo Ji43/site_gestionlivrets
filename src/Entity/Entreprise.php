@@ -40,9 +40,9 @@ class Entreprise
     private $mail;
 
     /**
-     * @ORM\OneToMany(targetEntity=MaitreStage::class, mappedBy="entreprise")
+     * @ORM\OneToMany(targetEntity=MaitreApprentissage::class, mappedBy="entreprise")
      */
-    private $maitreStages;
+    private $maitreApprentissages;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formation::class, mappedBy="entreprise")
@@ -51,7 +51,7 @@ class Entreprise
 
     public function __construct()
     {
-        $this->maitreStages = new ArrayCollection();
+        $this->maitreApprentissages = new ArrayCollection();
         $this->formations = new ArrayCollection();
     }
 
@@ -109,33 +109,41 @@ class Entreprise
     }
 
     /**
-     * @return Collection|MaitreStage[]
+     * @return Collection|MaitreApprentissage[]
      */
-    public function getMaitreStages(): Collection
+    public function getMaitreApprentissage(): Collection
     {
-        return $this->maitreStages;
+        return $this->maitreApprentissages;
     }
 
-    public function addMaitreStage(MaitreStage $maitreStage): self
+    public function addMaitreApprentissage(MaitreApprentissage $maitreApprentissage): self
     {
-        if (!$this->maitreStages->contains($maitreStage)) {
-            $this->maitreStages[] = $maitreStage;
-            $maitreStage->setEntreprise($this);
+        if (!$this->maitreApprentissages->contains($maitreApprentissage)) {
+            $this->maitreApprentissages[] = $maitreApprentissage;
+            $maitreApprentissage->setEntreprise($this);
         }
 
         return $this;
     }
 
-    public function removeMaitreStage(MaitreStage $maitreStage): self
+    public function removeMaitreApprentissage(MaitreApprentissage $maitreApprentissage): self
     {
-        if ($this->maitreStages->removeElement($maitreStage)) {
+        if ($this->maitreApprentissages->removeElement($maitreApprentissage)) {
             // set the owning side to null (unless already changed)
-            if ($maitreStage->getEntreprise() === $this) {
-                $maitreStage->setEntreprise(null);
+            if ($maitreApprentissage->getEntreprise() === $this) {
+                $maitreApprentissage->setEntreprise(null);
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|MaitreApprentissage[]
+     */
+    public function getMaitreApprentissages(): Collection
+    {
+        return $this->maitreApprentissages;
     }
 
     /**
@@ -150,7 +158,7 @@ class Entreprise
     {
         if (!$this->formations->contains($formation)) {
             $this->formations[] = $formation;
-            $formation->setEntreprise($this);
+            $formation->addEntreprise($this);
         }
 
         return $this;
@@ -159,12 +167,10 @@ class Entreprise
     public function removeFormation(Formation $formation): self
     {
         if ($this->formations->removeElement($formation)) {
-            // set the owning side to null (unless already changed)
-            if ($formation->getEntreprise() === $this) {
-                $formation->setEntreprise(null);
-            }
+            $formation->removeEntreprise($this);
         }
 
         return $this;
     }
+
 }

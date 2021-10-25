@@ -6,6 +6,11 @@
             {{ form_row(champSelect) }}
             <h4><b>OU</b></h4>
             {{ form_row(champNew) }}
+            {% if button is defined and button == true %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

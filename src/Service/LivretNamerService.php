@@ -3,8 +3,6 @@
 
 namespace App\Service;
 
-use App\Entity\Etudiant;
-use App\Entity\Formation;
 use App\Entity\Livret;
 
 /**
@@ -20,7 +18,7 @@ class LivretNamerService
     public function generateLivretName(Livret $livret) : string {
 
         return "Formation ". "<i>" . $livret->getFormation()->getLibelle() . "</i> de l'apprentis " .
-            $livret->getEtudiant()->getFullName() . " pour les années " . $livret->getPeriode()->getAnnees();
+            $livret->getEtudiant()->getFullName() . " pour la période " . $livret->getPeriode()->getAnnees();
 
     }
 

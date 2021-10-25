@@ -23,29 +23,29 @@ class Livret
     private $nomLivret;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Formation::class, inversedBy="livrets")
+     * @ORM\ManyToOne(targetEntity=Formation::class, inversedBy="livrets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $formation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=etudiant::class, inversedBy="livrets")
+     * @ORM\ManyToOne(targetEntity=etudiant::class, inversedBy="livrets", cascade={"persist"})
      * @ORM\JoinColumn (nullable=false)
      */
     private $etudiant;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MaitreStage::class, inversedBy="livrets")
+     * @ORM\ManyToOne(targetEntity=MaitreApprentissage::class, inversedBy="livrets", cascade={"persist"})
      */
-    private $maitreStage;
+    private $maitreApprentissage;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ProfTuteur::class, inversedBy="livrets")
+     * @ORM\ManyToOne(targetEntity=ProfTuteur::class, inversedBy="livrets", cascade={"persist"})
      */
     private $profTuteur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Periode::class, inversedBy="livrets")
+     * @ORM\ManyToOne(targetEntity=Periode::class, inversedBy="livrets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $periode;
@@ -80,7 +80,8 @@ class Livret
         return $this;
     }
 
-    public function getEtudiant() : ?Etudiant {
+    public function getEtudiant(): ?Etudiant
+    {
         return $this->etudiant;
     }
 
@@ -91,14 +92,14 @@ class Livret
         return $this;
     }
 
-    public function getMaitreStage(): ?MaitreStage
+    public function getMaitreApprentissage(): ?MaitreApprentissage
     {
-        return $this->maitreStage;
+        return $this->maitreApprentissage;
     }
 
-    public function setMaitreStage(?MaitreStage $maitreStage): self
+    public function setMaitreApprentissage(?MaitreApprentissage $maitreApprentissage): self
     {
-        $this->maitreStage = $maitreStage;
+        $this->maitreApprentissage = $maitreApprentissage;
 
         return $this;
     }
@@ -125,6 +126,14 @@ class Livret
         $this->periode = $periode;
 
         return $this;
+    }
+
+    //Retourne true si l'utilisateur est concerné par ce livret
+    public function isConcerned(Compte $compte):bool {
+        if($compte == $this->etudiant || $compte == $this->maitreApprentissage || $compte == $this->profTuteur) {
+            return true;
+        }
+        return false;
     }
 
 }

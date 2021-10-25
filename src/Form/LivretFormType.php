@@ -5,7 +5,7 @@ namespace App\Form;
 use App\Entity\Etudiant;
 use App\Entity\Formation;
 use App\Entity\Livret;
-use App\Entity\MaitreStage;
+use App\Entity\MaitreApprentissage;
 use App\Entity\Periode;
 use App\Entity\ProfTuteur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LivretFormType extends ApplicationType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -25,23 +26,26 @@ class LivretFormType extends ApplicationType
                     Etudiant::class, "Choix d'un étudiant", "fullname",
                     "Sélectionner un étudiant...")
             )
+
             ->add('nouveauEtudiant', EtudiantType::class,
                 $this->getConfigurationFormType(
-                    "Ajouter un étudiant", "etudiant")
+                    "Ajouter un étudiant")
             )
+
+          /*
             ->add('formation', EntityType::class,
                 $this->getConfigurationEntityType(Formation::class, "Choix d'une formation",
                     "libelle", "Sélectionner d'une formation..")
             )
             ->add('nouvelleFormation', FormationType::class,
-                $this->getConfigurationFormType("Ajouter une formation", "formation")
+                $this->getConfigurationFormType("Ajouter une formation")
             )
-            ->add('maitreStage', EntityType::class,
-                $this->getConfigurationEntityType(MaitreStage::class, "Choix d'un maître de stage",
-                    "fullName", "Sélectionner un maître de stage...")
+            ->add('maitreApprentissage', EntityType::class,
+                $this->getConfigurationEntityType(MaitreApprentissage::class, "Choix d'un maître d'apprentissage",
+                    "fullName", "Sélectionner un maître d'apprentissage...")
             )
-            ->add('nouveauMaitreStage', MaitreStageType::class,
-                $this->getConfigurationFormType("Ajouter un maître de stage", "maitreStage")
+            ->add('nouveauMaitreApprentissage', MaitreApprentissageType::class,
+                $this->getConfigurationFormType("Ajouter un maître d'apprentissage")
             )
             ->add('profTuteur', EntityType::class,
                 $this->getConfigurationEntityType(
@@ -50,7 +54,7 @@ class LivretFormType extends ApplicationType
                 )
             )
             ->add('nouveauProfTuteur', ProfTuteurType::class,
-                $this->getConfigurationFormType("Ajouter un professeur tuteur", "profTuteur")
+                $this->getConfigurationFormType("Ajouter un professeur tuteur")
             )
             ->add('periode', EntityType::class,
                 $this->getConfigurationEntityType(
@@ -59,8 +63,9 @@ class LivretFormType extends ApplicationType
                 )
             )
             ->add('nouvellePeriode', PeriodeType::class,
-                $this->getConfigurationFormType("Ajouter une période", "periode")
+                $this->getConfigurationFormType("Ajouter une période")
             )
+            */
         ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -68,44 +73,24 @@ class LivretFormType extends ApplicationType
             $data = $event->getData();
             $form = $event->getForm();
 
+            if (empty($data['etudiant']) && !empty($data['nouveauEtudiant']['nom'])) {
+                $form->remove('nouveauEtudiant');
+
+                $form->add('nouveauEtudiant',EtudiantType::class,[
+                    'property_path' => 'etudiant'
+                ]);
+            }
+        });
+
+
+            /*
             $this->setFormEvent($data, $form, "etudiant", "nouveauEtudiant", EtudiantType::class);
             $this->setFormEvent($data, $form, "formation", "nouvelleFormation", FormationType::class);
-            $this->setFormEvent($data, $form, "maitreStage", "nouveauMaitreStage", MaitreStageType::class);
+            $this->setFormEvent($data, $form, "maitreApprentissage", "nouveauMaitreApprentissage", MaitreApprentissage::class);
             $this->setFormEvent($data, $form, "profTuteur", "nouveauProfTuteur", ProfTuteurType::class);
             $this->setFormEvent($data, $form, "periode", "nouvellePeriode", PeriodeType::class);
+            */
 
-
-//            if (!empty($data['nouveauEtudiant']['id'])) {
-//
-//                $form->remove('etudiant');
-//                $form->add('nouveauEtudiant',
-//                    EtudiantType::class, [
-//                        'required' => true,
-//                        'mapped' => true,
-//                        'property_path' => 'etudiant'
-//                    ]);
-//            }
-
-//            if (!empty($data['nouvelleFormation']['id'])) {
-//                $form->remove('formation');
-//                $form->add('nouvelleFormation',
-//                    FormationType::class, [
-//                        'required' => true,
-//                        'mapped' => true,
-//                        'property_path' => "formation"
-//                    ]);
-//            }
-
-//            if (!empty($data['nouveauMaitreStage']['id'])) {
-//                $form->remove('maitreStage');
-//                $form->add('nouveauMaitreStage',
-//                    MaitreStageType::class, [
-//                        'required' => true,
-//                        'mapped' => true,
-//                        'property_path' => "maitreStage"
-//                    ]);
-//            }
-        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
