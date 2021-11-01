@@ -128,6 +128,16 @@ class Livret
         return $this;
     }
 
+    public function getAllAccounts(): array
+    {
+        $accounts = array();
+        $accounts[] = $this->etudiant;
+        $accounts[] = $this->maitreApprentissage;
+        $accounts[] = $this->profTuteur;
+
+        return $accounts;
+    }
+
     //Retourne true si l'utilisateur est concerné par ce livret
     public function isConcerned(Compte $compte):bool {
         if($compte == $this->etudiant || $compte == $this->maitreApprentissage || $compte == $this->profTuteur) {

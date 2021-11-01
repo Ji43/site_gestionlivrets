@@ -3,9 +3,14 @@
         <div class="alert alert-light">
             <h2>{{ formTitle }}</h2>
             <hr>
-            {{ form_row(champSelect) }}
+            <div id="formSelect">
+                {{ form_row(champSelect) }}
+            </div>
             <h4><b>OU</b></h4>
-            {{ form_row(champNew) }}
+            <div id="formAjout">
+                {{ form_row(champNew) }}
+            </div>
+
             {% if button is defined and button == true %}
                 <div class="text-right">
                     <button type="submit" class="btn btn-primary">Valider</button>

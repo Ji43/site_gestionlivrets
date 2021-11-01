@@ -41,5 +41,3 @@ class FrenchToDateTimeTransformer implements DataTransformerInterface {
 
     }
 }
-
-?>

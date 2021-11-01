@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Compte;
 use App\Entity\Etudiant;
+use App\Entity\Livret;
 use App\Entity\ProfTuteur;
 
 /**
@@ -70,6 +71,18 @@ class usernamePasswordMakerService
         }
 
         return $password;
+    }
+
+    public function GenerateLivretUsersData(Livret $livret)
+    {
+        foreach ($livret->getAllAccounts() as $account) {
+            if(empty($account->getNomUtilisateur())) {
+                $account->setNomUtilisateur($this->generateUsername($account));
+            }
+            if(empty($account->getPassword())) {
+                $account->setPassword($this->generatePassword($account));
+            }
+        }
     }
 
 }

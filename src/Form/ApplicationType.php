@@ -71,19 +71,19 @@ class ApplicationType extends AbstractType
      *
      * @param array $data
      * @param FormInterface $form
-     * @param string $selectField
-     * @param string $newField
+     * @param string $select
+     * @param string $new
      * @param string $class
      */
-    protected function setFormEvent(array $data, FormInterface $form, string $selectField, string $newField, string $class)
+    protected function setFormEvent(array $data, FormInterface $form, string $select, string $new, string $field, string $class)
     {
 
-        if ( empty($data[$selectField]) && !empty($data[$newField]['id']) ) {
+        if (empty($data[$select]) && !empty($data[$new][$field])) {
 
-            $form->remove($newField);
-            $form->add($newField,
+            $form->remove($new);
+            $form->add($new,
                 $class, [
-                    'property_path' => $selectField
+                    'property_path' => $select
                 ]);
         }
 

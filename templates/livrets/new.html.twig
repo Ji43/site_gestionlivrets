@@ -6,9 +6,10 @@
     <div class="container">
 
         <h1 class="my-5">Nouveau livret</h1>
+
         {{ form_start(form) }}
 
-{#        {% include 'livrets/form_livret.html.twig' with {
+       {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations générales",
             'champSelect': form.periode,
             'champNew': form.nouvellePeriode,
@@ -30,7 +31,7 @@
             'formTitle': "Informations professeur tuteur",
             'champSelect': form.profTuteur,
             'champNew': form.nouveauProfTuteur,
-        } %}#}
+        } %}
 
         {% include 'livrets/form_livret.html.twig' with {
             'formTitle': "Informations étudiant",
@@ -42,5 +43,10 @@
     </div>
     {{ form_end(form) }}
 
-
 {% endblock %}
+
+{#
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/form_script.js') }}"></script>
+{% endblock %}#}

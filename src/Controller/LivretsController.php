@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Formation;
 use App\Entity\Livret;
-use App\Entity\MaitreApprentissage;
-use App\Entity\Periode;
-use App\Entity\ProfTuteur;
 use App\Form\LivretFormType;
 use App\Repository\LivretRepository;
+use App\Service\LivretNamerService;
+use App\Service\usernamePasswordMakerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -17,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LivretsController extends AbstractController
 {
@@ -89,29 +88,17 @@ class LivretsController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function new(Request $request, EntityManagerInterface $manager) {
+    public function new(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, usernamePasswordMakerService $usermaker, LivretNamerService $livretNamer) {
 
         $livret = new Livret();
-        $livret->setNomLivret("Livret d'essais");
-        $livret->setFormation($manager->getRepository(Formation::class)->findOneBy([
-            'id' => 1
-        ]));
-        $livret->setMaitreApprentissage($manager->getRepository(MaitreApprentissage::class)->findOneBy([
-            'id' => 1
-        ]));
-        $livret->setProfTuteur($manager->getRepository(ProfTuteur::class)->findOneBy([
-            'id' => 1
-        ]));
-        $livret->setPeriode($manager->getRepository(Periode::class)->findOneBy([
-            'id' => 1
-        ]));
-
         $form = $this->createForm(LivretFormType::class,$livret);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+
+            $usermaker->GenerateLivretUsersData($livret);
+            $livretNamer->generateLivretName($livret);
             $manager->persist($livret);
             $manager->flush();
-
             $this->addFlash('success','Le livret a bien été enregistré avec succès !');
         }
 

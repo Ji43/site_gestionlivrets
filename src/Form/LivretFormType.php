@@ -26,13 +26,10 @@ class LivretFormType extends ApplicationType
                     Etudiant::class, "Choix d'un étudiant", "fullname",
                     "Sélectionner un étudiant...")
             )
-
             ->add('nouveauEtudiant', EtudiantType::class,
                 $this->getConfigurationFormType(
                     "Ajouter un étudiant")
             )
-
-          /*
             ->add('formation', EntityType::class,
                 $this->getConfigurationEntityType(Formation::class, "Choix d'une formation",
                     "libelle", "Sélectionner d'une formation..")
@@ -65,33 +62,19 @@ class LivretFormType extends ApplicationType
             ->add('nouvellePeriode', PeriodeType::class,
                 $this->getConfigurationFormType("Ajouter une période")
             )
-            */
         ;
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-
             $data = $event->getData();
             $form = $event->getForm();
 
-            if (empty($data['etudiant']) && !empty($data['nouveauEtudiant']['nom'])) {
-                $form->remove('nouveauEtudiant');
-
-                $form->add('nouveauEtudiant',EtudiantType::class,[
-                    'property_path' => 'etudiant'
-                ]);
-            }
+            $this->setFormEvent($data, $form, "etudiant", "nouveauEtudiant", "nom", EtudiantType::class);
+            $this->setFormEvent($data, $form, "formation", "nouvelleFormation", "libelle", FormationType::class);
+            $this->setFormEvent($data, $form, "maitreApprentissage", "nouveauMaitreApprentissage", 'nom', MaitreApprentissageType::class);
+            $this->setFormEvent($data, $form, "profTuteur", "nouveauProfTuteur", 'nom', ProfTuteurType::class);
+            $this->setFormEvent($data, $form, "periode", "nouvellePeriode", 'annee1', PeriodeType::class);
         });
-
-
-            /*
-            $this->setFormEvent($data, $form, "etudiant", "nouveauEtudiant", EtudiantType::class);
-            $this->setFormEvent($data, $form, "formation", "nouvelleFormation", FormationType::class);
-            $this->setFormEvent($data, $form, "maitreApprentissage", "nouveauMaitreApprentissage", MaitreApprentissage::class);
-            $this->setFormEvent($data, $form, "profTuteur", "nouveauProfTuteur", ProfTuteurType::class);
-            $this->setFormEvent($data, $form, "periode", "nouvellePeriode", PeriodeType::class);
-            */
-
-    }
+}
 
     public function configureOptions(OptionsResolver $resolver)
     {

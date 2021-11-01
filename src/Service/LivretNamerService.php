@@ -15,11 +15,14 @@ use App\Entity\Livret;
 class LivretNamerService
 {
 
-    public function generateLivretName(Livret $livret) : string {
+    public function generateLivretName(Livret $livret) {
 
-        return "Formation ". "<i>" . $livret->getFormation()->getLibelle() . "</i> de l'apprentis " .
+        $name = "Formation ". "<i>" . $livret->getFormation()->getLibelle() . "</i> de l'apprentis " .
             $livret->getEtudiant()->getFullName() . " pour la période " . $livret->getPeriode()->getAnnees();
 
-    }
+        if(empty($livret->getNomLivret())) {
+            $livret->setNomLivret($name);
+        }
 
+    }
 }
